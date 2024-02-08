@@ -1,7 +1,7 @@
 import getArgs from "./helpers/args.js";
 import { getWeather } from "./services/api.service.js";
 import { printError, printSuccess, printHelp } from "./services/log.service.js";
-import { saveKeyValue } from "./services/storage.service.js";
+import { getKeyValue, saveKeyValue } from "./services/storage.service.js";
 
 const saveToken = async (token) => {
   if (!token.length) {
@@ -16,9 +16,23 @@ const saveToken = async (token) => {
   }
 };
 
+const saveCity = async (city) => {
+    if (!city.length) {
+      printError("City not provided!");
+      return;
+    }
+    try {
+      await saveKeyValue("city", city);
+      printSuccess("City was saved");
+    } catch (error) {
+      printError(error.message);
+    }
+  };
+
 const getForcast = async () => {
     try{
-        const response = await getWeather(process.env.CITY ?? 'tashkent')
+        const city = process.env.CITY ?? (await getKeyValue('city'))
+        const response = await getWeather(city)
         console.log(response);
     } catch (error) {
         if(error?.response?.status == 404){
@@ -34,13 +48,13 @@ const startCLI = () => {
   const args = getArgs(process.argv);
 
   if (args.h) {
-    printHelp();
+    return printHelp();
   } else if (args.s) {
-    printSuccess(args.s);
+    return saveCity(args.s);
   } else if (args.t) {
-    saveToken(args.t);
+    return saveToken(args.t);
   } 
-  getForcast();
+  return getForcast();
 };
 
 startCLI();
