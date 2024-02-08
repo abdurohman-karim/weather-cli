@@ -8,8 +8,7 @@ const getWeather = async (city) => {
   if (!token) {
     throw new Error("API_KEY does not exist, write -t [TOKEN] to set token");
   }
-  try {
-    const response = await axios.get(
+  const response = await axios.get(
     'https://api.openweathermap.org/data/2.5/weather',
     {
         params: {
@@ -18,10 +17,6 @@ const getWeather = async (city) => {
         }
     });
     return response.data;
-  } catch (error) {
-    console.log(error.message);
-  }
-  
 };
 
 export { getWeather };
