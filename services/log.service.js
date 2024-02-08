@@ -12,9 +12,9 @@ const printHelp = () => {
   console.log(dedent`
     ${chalk.greenBright("HELP")}: 
     weather-cli <command> <option>
-    -s [CITY] - get weather in city
+    -s [${chalk.blackBright("CITY")}] - get weather in city
     -h - get help
-    -t [API_KEY] - set token
+    -t [${chalk.blackBright("TOKEN")}] - set token
     `);
 };
 
