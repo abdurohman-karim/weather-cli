@@ -1,18 +1,23 @@
 import getArgs from "./helpers/args.js";
+import {getWeather} from "./services/api.service.js";
 import { printError, printSuccess, printHelp } from "./services/log.service.js";
 import { saveKeyValue } from "./services/storage.service.js";
 
+const saveToken = async (token) => {
+    if (!token.length) {
+        printError("Token not provided!");
+        return;
+    }
+    try {
+        await saveKeyValue("token", token);
+        printSuccess("Token was saved");
+    } catch (error) {
+        printError(error.message);
+    }
+};
 const startCLI = () => {
   const args = getArgs(process.argv);
 
-  const saveToken = async (token) => {
-    try {
-      await saveKeyValue("token", token);
-      printSuccess("Token was saved");
-    } catch (error) {
-      printError(error.message);
-    }
-  };
 
   if (args.h) {
     printHelp();
@@ -23,6 +28,7 @@ const startCLI = () => {
   } else {
     printError("Command not found");
   }
+  getWeather('london')
 };
 
 startCLI();
